@@ -16,10 +16,15 @@ int ft_popen(const char *file, char *const argv[], char type)
 	{
 		if (!execvp(file, argv))
 			return (-1);	
-	}	
-	return (0);
+	}
+	if (type == 'r')
+		return (fd[0]);
+	return (fd[1]);
 }
+
+#include <stdio.h>
 int main(int ac, char **av)
 {
-	ft_popen("ls", av, 'r');
+	int fd = ft_popen("ls", av, 'w');
+	printf("this is the results : %d\n", fd);
 } 
