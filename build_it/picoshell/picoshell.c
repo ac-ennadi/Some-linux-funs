@@ -12,12 +12,11 @@ int picoshell(char **cmds[])
 	// in the child pross.. fork retrun 0 || 
 	if (n_pid == 0)
 	{
-		printf("n_pid value: %d\n getpid: %d\n", n_pid, getpid());
 		wait(n_pid);
 	}
 	//fork < 0 mean we are in the parent pross.. 
 	else
-		printf("On Parent Pross.. n_pid value: %d\n getpid: %d\n", n_pid, getpid());	
+		printf("On Parent Pross.. n_pid value: %d\n getpid: %d\n", n_pid, getpid());
 	return 0; 
 }
 
