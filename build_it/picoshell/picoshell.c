@@ -1,27 +1,16 @@
 #include <stdio.h>
+#include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
 #define CMD_NUM 5
 
 int picoshell(char **cmds[])
 {
-    int i = 0;
-    int j;
-    while (cmds[i] != 0)
-    {
-		j = 0;
-		while (cmds[i][j] != 0)
-		{
-			printf("CMD[%d]: %s\n", i, cmds[i][j]);
-			j++;
-		}
-		printf("This is an args: %d\n", i);
-		i++;
-    }
+	char **args = cmds[0];
+	printf("args : %s\n", args[1]);
+	execvp("ls", args);
 	return 0; 
-}
-
-//from subject
+}//from subject
 int	main(int argc, char **argv)
 {
 	int	cmds_size = 1;
