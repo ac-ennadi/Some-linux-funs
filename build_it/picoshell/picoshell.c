@@ -1,16 +1,26 @@
 #include <stdio.h>
-#include <unistd.h>
 #include <string.h>
+#include <sys/wait.h>
 #include <stdlib.h>
-#define CMD_NUM 5
 
 int picoshell(char **cmds[])
 {
-	char **args = cmds[0];
-	printf("args : %s\n", args[1]);
-	execvp("ls", args);
+	int n_pid;
+	// char **args = cmds[0];
+
+	n_pid = fork();
+	// in the child pross.. fork retrun 0 || 
+	if (n_pid == 0)
+	{
+		printf("n_pid value: %d\n getpid: %d\n", n_pid, getpid());
+		wait(n_pid);
+	}
+	//fork < 0 mean we are in the parent pross.. 
+	else
+		printf("On Parent Pross.. n_pid value: %d\n getpid: %d\n", n_pid, getpid());	
 	return 0; 
-}//from subject
+}
+
 int	main(int argc, char **argv)
 {
 	int	cmds_size = 1;
@@ -43,4 +53,3 @@ int	main(int argc, char **argv)
 	free(cmds);
 	return ret;
 }
-
