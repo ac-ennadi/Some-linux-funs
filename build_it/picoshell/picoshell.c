@@ -18,6 +18,7 @@ int picoshell(char **cmds[])
 		printf("This is an args: %d\n", i);
 		i++;
     }
+	return 0; 
 }
 
 //from subject
