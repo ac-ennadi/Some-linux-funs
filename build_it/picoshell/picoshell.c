@@ -1,24 +1,69 @@
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #include <sys/wait.h>
 #include <stdlib.h>
-
+//TO DO LIST
+/*
+	1 - Create An Way To Make
+*/
 int picoshell(char **cmds[])
 {
-	int n_pid;
-	// char **args = cmds[0];
-
-	n_pid = fork();
-	// in the child pross.. fork retrun 0 || 
-	if (n_pid == 0)
+	int i;
+	int prev_fd;
+	int fd[2];
+	pid_t pid;
+	int status;
+	
+	i = 0;
+	prev_fd = 0;
+	while (cmds[i])
 	{
-		wait(n_pid);
+		if (cmds[i + 1])
+			pipe(fd);
+		pid = fork();
+		if (pid == -1)
+		{
+			close(fd[0]);
+			close(fd[1]);
+			return (1);
+		}
+		else if (pid == 0)
+		{
+			if (prev_fd != 0)
+			{
+				dup2(prev_fd, STDIN_FILENO);
+				close(prev_fd);
+			}
+			if (cmds[i + 1])
+			{
+				close(fd[0]);
+				dup2(fd[1], STDOUT_FILENO);
+				close(fd[1]);
+			}
+			execvp(cmds[i][0], cmds[i]);
+			exit(EXIT_FAILURE);
+		}
+		else
+		{
+			if (prev_fd != 0)
+				close(prev_fd);
+			if (cmds[i + 1])
+			{
+				close(fd[1]);
+				prev_fd = fd[0];
+			}
+		}
+		i++;
 	}
-	//fork < 0 mean we are in the parent pross.. 
-	else
-		printf("On Parent Pross.. n_pid value: %d\n getpid: %d\n", n_pid, getpid());
-	return 0; 
+	while (wait(&status) > 0)
+	{
+		if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
+			return (1);
+	}
+	return (0);
 }
+
 
 int	main(int argc, char **argv)
 {
